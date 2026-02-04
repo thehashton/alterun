@@ -1,0 +1,23 @@
+/* Storybook preview — font variables to match app */
+:root {
+  --font-display: "Cinzel", serif;
+  --font-body: "Crimson Pro", serif;
+}
+
+/* Light theme for Storybook addon-themes — applied to iframe root */
+.storybook-theme-light {
+  --color-bg: #f5f0e8;
+  --color-bg-elevated: #ebe6de;
+  --color-bg-header-top: #e8e2d9;
+  --color-bg-card: #e0d9cf;
+  --color-border: #c9c0b5;
+  --color-border-muted: #d4cdc4;
+  --color-gold: #9a7b2a;
+  --color-gold-muted: #7a6344;
+  --color-accent: #6b3410;
+  --color-muted: #5c554d;
+}
+
+.storybook-theme-light body {
+  color: var(--color-muted);
+}

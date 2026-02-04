@@ -55,7 +55,7 @@ export function Header({ user = null }: Props) {
         <Link
           href="/"
           aria-label="Alterun – Home"
-          className="relative h-[2.75rem] w-28 sm:h-20 sm:w-64 hover:opacity-90 transition-opacity flex-shrink-0 flex items-center justify-center mx-2 sm:mx-4 overflow-hidden"
+          className="header-initial-fade relative h-[2.75rem] w-28 sm:h-20 sm:w-64 hover:opacity-90 transition-opacity flex-shrink-0 flex items-center justify-center mx-2 sm:mx-4 overflow-hidden"
         >
           <Image
             src={logo}
@@ -93,7 +93,7 @@ export function Header({ user = null }: Props) {
       </div>
       <div className="relative w-full h-10 sm:h-14 -mt-3 sm:-mt-4 overflow-visible">
         <div
-          className="absolute inset-0 z-0 w-full h-full bg-repeat-x bg-bottom"
+          className="absolute inset-0 z-0 w-full h-full bg-repeat-x bg-bottom bg-alterun-header-top"
           style={{
             backgroundImage: `url(${headerTopBorderImg.src})`,
             backgroundSize: "auto 100%",

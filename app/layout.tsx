@@ -4,6 +4,9 @@ import "./globals.css";
 import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/Header";
 import { HeaderBorderButton } from "@/components/HeaderBorderButton";
+import headerBgImg from "@/images/alterun-header-bg.png";
+import headerBorderImg from "@/images/alterun-header-border.png";
+import headerTopBorderImg from "@/images/alterun-top-border.png";
 
 const display = Cinzel({
   variable: "--font-display",
@@ -43,6 +46,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
+      <head>
+        <link rel="preload" as="image" href={headerBorderImg.src} />
+        <link rel="preload" as="image" href={headerBgImg.src} />
+        <link rel="preload" as="image" href={headerTopBorderImg.src} />
+      </head>
       <body className="min-h-screen flex flex-col">
         <Header user={user} />
         <HeaderBorderButton />

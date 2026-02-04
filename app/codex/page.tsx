@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getCodexCategories, getCodexEntries } from "@/lib/codex/queries";
+import { IconPlus } from "@/components/icons";
 import { CodexSearchForm } from "./CodexSearchForm";
 
 export const metadata = {
@@ -23,14 +24,23 @@ export default async function CodexPage({ searchParams }: Props) {
 
   return (
     <div className="codex-page max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-      <header className="mb-10">
-        <h1 className="font-display text-3xl sm:text-4xl text-alterun-gold uppercase tracking-widest mb-2">
-          The Codex
-        </h1>
-        <span className="block h-px w-20 bg-alterun-gold/40 mb-4" aria-hidden />
-        <p className="font-display text-alterun-gold-muted/90 text-lg tracking-wide">
-          Browse by realm or search the lore.
-        </p>
+      <header className="mb-10 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl sm:text-4xl text-alterun-gold uppercase tracking-widest mb-2">
+            The Codex
+          </h1>
+          <span className="block h-px w-20 bg-alterun-gold/40 mb-4" aria-hidden />
+          <p className="font-display text-alterun-gold-muted/90 text-lg tracking-wide">
+            Browse by realm or search the lore.
+          </p>
+        </div>
+        <Link
+          href="/admin/codex/entries/new"
+          className="btn-hover flex shrink-0 items-center gap-2 rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-base font-display uppercase tracking-wider text-alterun-gold transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold hover:bg-alterun-gold/25"
+        >
+          <IconPlus className="h-5 w-5 flex-shrink-0" />
+          Add entry
+        </Link>
       </header>
 
       <section className="ornament-border rounded-lg border-l-2 border-l-alterun-gold/30 bg-alterun-bg-card p-5 sm:p-6 mb-10">
@@ -81,9 +91,17 @@ export default async function CodexPage({ searchParams }: Props) {
       )}
 
       <section>
-        <h2 className="font-display text-sm text-alterun-gold uppercase tracking-widest mb-3">
-          Chronicles
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <h2 className="font-display text-sm text-alterun-gold uppercase tracking-widest">
+            Chronicles
+          </h2>
+          <Link
+            href="/admin/codex/entries/new"
+            className="text-sm font-display uppercase tracking-wider text-alterun-gold-muted hover:text-alterun-gold transition-colors"
+          >
+            + Add entry
+          </Link>
+        </div>
         <span className="block h-px w-12 bg-alterun-gold/30 mb-4" aria-hidden />
 
         {entries.length === 0 ? (

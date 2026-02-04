@@ -41,6 +41,12 @@ The world of Alterun — a Next.js site with a blog (Martin/Sanderson style) and
 
 5. **On commit** — [lint-staged](https://github.com/okonet/lint-staged) runs `eslint --fix` on staged `.js/.jsx/.ts/.tsx` files, then `pnpm run build` must pass (`.husky/pre-commit`). **Before pushing** — `pnpm run check` (lint + build) runs via `.husky/pre-push`. After `pnpm install`, run `pnpm exec husky init` once to enable hooks.
 
+6. **Storybook** — Component library and button variations (including image-backed buttons).
+   ```bash
+   pnpm run storybook
+   ```
+   Open [http://localhost:6006](http://localhost:6006). Use the **Themes** toolbar addon to switch between Dark and Light.
+
 ## Routes
 
 - `/` — Home

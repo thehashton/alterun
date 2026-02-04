@@ -1,0 +1,354 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark fantasy palette */
+  --color-bg: #0d0c0b;
+  --color-bg-elevated: #151412;
+  --color-bg-header-top: #0f0e18; /* Dark indigo/navy to match border asset top band */
+  --color-bg-card: #1a1917;
+  --color-border: #2d2a26;
+  --color-border-muted: #22201d;
+  --color-gold: #c9a227;
+  --color-gold-muted: #8b7355;
+  --color-accent: #8b4513;
+  --color-muted: #6b6560;
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    @apply bg-alterun-bg text-alterun-muted font-body antialiased;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Header flush to top of viewport */
+body > header:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Header background — space-like drift (visible star-dots moving slowly) */
+.header-space-bg {
+  background-image: radial-gradient(
+      3px 3px at 15% 25%,
+      rgba(255, 255, 255, 0.35) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      3px 3px at 55% 65%,
+      rgba(255, 255, 255, 0.28) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      2px 2px at 85% 15%,
+      rgba(255, 255, 255, 0.3) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      2px 2px at 40% 80%,
+      rgba(255, 255, 255, 0.22) 0%,
+      transparent 70%
+    );
+  background-size: 120% 120%, 130% 130%, 110% 110%, 140% 140%;
+  background-position: 0% 0%, 100% 0%, 50% 100%, 0% 100%;
+  background-repeat: no-repeat;
+  animation: header-space-drift 20s ease-in-out infinite;
+}
+
+@keyframes header-space-drift {
+  0%,
+  100% {
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 100%;
+  }
+  50% {
+    background-position: 15% 10%, 85% 15%, 40% 90%, 10% 85%;
+  }
+}
+
+/* Bottom border button — overlaps border, sits on top; imprinted (pressed down) on hover */
+.border-button-press {
+  transform: translate(-50%, -8px);
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out;
+}
+.border-button-press:hover {
+  transform: translate(-50%, -5px) scale(0.98);
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+.border-button-press:active {
+  transform: translate(-50%, -3px) scale(0.96);
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Fixed header border button (rendered in layout, always on top) */
+.border-button-press-fixed {
+  transform: translateX(-50%);
+  transition:
+    transform 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+}
+.border-button-press-fixed:hover {
+  transform: translateX(-50%) translateY(1.5px) scale(0.995);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.border-button-press-fixed:active {
+  transform: translateX(-50%) translateY(2.5px) scale(0.99);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Ornamental border utility */
+@layer components {
+  .ornament-border {
+    @apply border border-alterun-border relative;
+    box-shadow:
+      inset 0 0 0 1px rgba(201, 162, 39, 0.08),
+      0 0 20px -5px rgba(0, 0, 0, 0.5);
+  }
+  .ornament-border::before {
+    content: "";
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(
+      135deg,
+      transparent 40%,
+      rgba(201, 162, 39, 0.03) 50%,
+      transparent 60%
+    );
+  }
+}
+
+/* Hero logo shine animation — sweeps across periodically */
+.hero-logo-shine {
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.03) 40%,
+    rgba(201, 162, 39, 0.25) 50%,
+    rgba(255, 255, 255, 0.03) 60%,
+    transparent 65%,
+    transparent 100%
+  );
+  background-size: 60% 100%;
+  background-repeat: no-repeat;
+  animation: hero-shine 28s ease-in-out infinite;
+}
+
+@keyframes hero-shine {
+  0%,
+  4% {
+    background-position: -80% 0;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  11% {
+    background-position: 180% 0;
+    opacity: 1;
+  }
+  12%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Green smokey fire on logo only — masked, right side, always on (no animation) */
+.hero-green-glow {
+  inset: 0;
+  filter: blur(32px);
+  opacity: 0.5;
+  background:
+    radial-gradient(
+      ellipse 45% 45% at 88% 20%,
+      rgba(140, 200, 120, 0.4) 0%,
+      rgba(100, 170, 90, 0.25) 40%,
+      rgba(70, 140, 70, 0.12) 70%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 45% 45% at 88% 80%,
+      rgba(140, 200, 120, 0.4) 0%,
+      rgba(100, 170, 90, 0.25) 40%,
+      rgba(70, 140, 70, 0.12) 70%,
+      transparent 100%
+    );
+}
+
+/* Clickable hit area for gem (toggle on/off) — no visible ring or outline */
+.hero-gem-hit {
+  position: absolute;
+  left: 54%;
+  top: 42%;
+  width: 6%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  outline: none;
+  border: none;
+  background: transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+.hero-gem-hit:focus {
+  outline: none;
+}
+.hero-gem-hit:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Dark overlay over gem when off — dull grey-black, gem only, hard edge */
+.hero-gem-dark {
+  left: 54%;
+  top: 42%;
+  width: 2.2%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(40, 36, 36, 0.72) 0%,
+    rgba(38, 34, 34, 0.68) 50%,
+    rgba(32, 28, 28, 0.5) 70%,
+    rgba(24, 22, 22, 0.25) 85%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-gem-dark-visible {
+  opacity: 1;
+}
+
+/* Gem off state — hide glow and beams */
+.hero-gem-off {
+  opacity: 0;
+  pointer-events: none;
+  animation-play-state: paused !important;
+}
+
+/* Hero logo gem — subtle red glow pulse, centered on gem in R */
+.hero-gem-glow {
+  left: 54%;
+  top: 42%;
+  width: 2.5%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(220, 55, 55, 0.45) 0%,
+    rgba(190, 35, 35, 0.22) 40%,
+    rgba(150, 22, 22, 0.08) 65%,
+    transparent 80%
+  );
+  box-shadow:
+    0 0 3px 1.5px rgba(200, 45, 45, 0.4),
+    0 0 6px 2px rgba(170, 30, 30, 0.18);
+  animation: hero-gem-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes hero-gem-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* Hero logo gem — beams (fire-like), arc and fade, every now and then */
+.hero-gem-beams {
+  left: 54%;
+  top: 42%;
+  width: 20%;
+  height: 20%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: hero-gem-beams 14s ease-out infinite;
+}
+
+.hero-gem-beam {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  width: 3px;
+  height: 36%;
+  margin-left: -1.5px;
+  transform-origin: center bottom;
+  background: linear-gradient(
+    to top,
+    rgba(255, 140, 100, 0.55) 0%,
+    rgba(255, 100, 70, 0.6) 15%,
+    rgba(240, 70, 50, 0.45) 40%,
+    rgba(200, 50, 40, 0.2) 70%,
+    transparent 100%
+  );
+  border-radius: 2px;
+  filter: blur(0.5px);
+  animation: hero-gem-beam 14s ease-out infinite;
+}
+
+/* Slight variation per beam so they feel more like fire */
+.hero-gem-beam:nth-child(odd) {
+  transform-origin: center bottom;
+  filter: blur(0.6px);
+}
+.hero-gem-beam:nth-child(3n) {
+  width: 2px;
+  margin-left: -1px;
+}
+
+@keyframes hero-gem-beams {
+  0%, 2%, 8%, 100% {
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  6% {
+    opacity: 1;
+  }
+  7% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-gem-beam {
+  0%, 2% {
+    opacity: 0;
+    transform: rotate(var(--beam-rot)) scaleY(0);
+  }
+  3% {
+    opacity: 0.7;
+    transform: rotate(var(--beam-rot)) scaleY(0.7);
+  }
+  4% {
+    opacity: 0.9;
+    transform: rotate(var(--beam-rot)) scaleY(1) skewY(-2deg);
+  }
+  5% {
+    opacity: 0.85;
+    transform: rotate(var(--beam-rot)) scaleY(1) skewY(2deg);
+  }
+  6% {
+    opacity: 0.5;
+    transform: rotate(var(--beam-rot)) scaleY(0.95) skewY(0deg);
+  }
+  7%, 100% {
+    opacity: 0;
+    transform: rotate(var(--beam-rot)) scaleY(0.9);
+  }
+}

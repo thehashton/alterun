@@ -100,6 +100,7 @@ export function CategoryCombobox({
         role="combobox"
         aria-expanded={open}
         aria-haspopup="listbox"
+        aria-controls={open ? `${idProp}-listbox` : undefined}
         aria-label={label}
         className="min-h-[2.75rem] w-full rounded border border-alterun-border bg-alterun-bg px-3 py-2 focus-within:border-alterun-gold/50 focus-within:outline-none focus-within:ring-1 focus-within:ring-alterun-gold/30"
         onClick={() => setOpen(true)}

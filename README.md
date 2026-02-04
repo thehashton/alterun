@@ -39,7 +39,7 @@ The world of Alterun — a Next.js site with a blog (Martin/Sanderson style) and
    ```
    Open [http://localhost:3000](http://localhost:3000). Go to **Admin** → **Login** to sign in.
 
-5. **Before pushing** — Lint and build must pass. Run `pnpm run check` (runs `next lint` and `next build`). With [Husky](https://typicode.github.io/husky/) installed, `git push` runs this automatically via the `.husky/pre-push` hook. After `pnpm install`, run `pnpm exec husky init` once to enable the hook.
+5. **On commit** — [lint-staged](https://github.com/okonet/lint-staged) runs `eslint --fix` on staged `.js/.jsx/.ts/.tsx` files, then `pnpm run build` must pass (`.husky/pre-commit`). **Before pushing** — `pnpm run check` (lint + build) runs via `.husky/pre-push`. After `pnpm install`, run `pnpm exec husky init` once to enable hooks.
 
 ## Routes
 

@@ -21,7 +21,7 @@ type Props = {
 
 export function Header({ user = null }: Props) {
   return (
-    <header className="backdrop-blur-sm pt-0 mt-0 bg-alterun-header-top overflow-visible">
+    <header className="relative -top-8 -mb-12 backdrop-blur-sm pt-0 mt-0 bg-alterun-header-top overflow-visible">
       <div
         className="w-full h-14 sm:h-14 bg-repeat-x overflow-hidden bg-alterun-header-top [box-shadow:inset_0_1px_0_0_var(--color-bg-header-top)]"
         style={{

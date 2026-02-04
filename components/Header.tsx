@@ -51,7 +51,7 @@ export function Header() {
         <Link
           href="/"
           aria-label="Alterun – Home"
-          className="relative h-[2.75rem] w-28 sm:h-20 sm:w-64 hover:opacity-90 transition-opacity flex-shrink-0 flex items-center justify-center mx-2 sm:mx-4"
+          className="relative h-[2.75rem] w-28 sm:h-20 sm:w-64 hover:opacity-90 transition-opacity flex-shrink-0 flex items-center justify-center mx-2 sm:mx-4 overflow-hidden"
         >
           <Image
             src={logo}
@@ -60,6 +60,20 @@ export function Header() {
             sizes="(max-width: 640px) 7rem, 16rem"
             className="object-contain object-center"
             priority
+          />
+          <div
+            className="header-logo-shine absolute inset-0 pointer-events-none"
+            style={{
+              maskImage: `url(${logo.src})`,
+              WebkitMaskImage: `url(${logo.src})`,
+              maskSize: "contain",
+              WebkitMaskSize: "contain",
+              maskPosition: "center",
+              WebkitMaskPosition: "center",
+              maskRepeat: "no-repeat",
+              WebkitMaskRepeat: "no-repeat",
+            }}
+            aria-hidden
           />
         </Link>
         <nav className="flex-1 min-w-0 flex items-center justify-end gap-3 sm:gap-8">

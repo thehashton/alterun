@@ -161,6 +161,42 @@ body > header:first-of-type {
   }
 }
 
+/* Header logo shine — same effect, shorter cycle */
+.header-logo-shine {
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(201, 162, 39, 0.3) 50%,
+    rgba(255, 255, 255, 0.04) 60%,
+    transparent 65%,
+    transparent 100%
+  );
+  background-size: 60% 100%;
+  background-repeat: no-repeat;
+  animation: header-shine 18s ease-in-out infinite;
+}
+
+@keyframes header-shine {
+  0%,
+  5% {
+    background-position: -80% 0;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  14% {
+    background-position: 180% 0;
+    opacity: 1;
+  }
+  15%,
+  100% {
+    opacity: 0;
+  }
+}
+
 /* Green smokey fire on logo only — masked, right side, always on (no animation) */
 .hero-green-glow {
   inset: 0;

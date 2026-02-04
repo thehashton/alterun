@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cinzel, Crimson_Pro } from "next/font/google";
 import "./globals.css";
+import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/Header";
 import { HeaderBorderButton } from "@/components/HeaderBorderButton";
 
@@ -30,15 +31,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body className="min-h-screen flex flex-col">
-        <Header />
+        <Header user={user} />
         <HeaderBorderButton />
         <main className="flex-1">{children}</main>
       </body>

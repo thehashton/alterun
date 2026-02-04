@@ -43,15 +43,26 @@ The world of Alterun — a Next.js site with a blog (Martin/Sanderson style) and
 
 - `/` — Home
 - `/blog` — Blog index (posts coming from Supabase)
-- `/codex` — Codex index (entries, categories, search)
+- `/codex` — Codex index (entries by category, search)
+- `/codex/[slug]` — Codex entry (body, images, related entries)
 - `/admin` — Dashboard (requires login)
 - `/admin/login` — Email login
 - `/admin/blog` — Blog admin (create/edit posts)
-- `/admin/codex` — Codex admin (entries, categories, images, links)
+- `/admin/codex` — Codex admin: list entries/categories, new entry, **Download database** (JSON export)
+- `/admin/codex/entries/new` — New codex entry
+- `/admin/codex/entries/[id]` — Edit entry (body, featured image, linked entries, extra images)
+- `/admin/codex/categories` — List and add categories
+- `/admin/codex/categories/[id]` — Edit category
+
+## Codex
+
+- **Entries**: title, slug, excerpt, body, category, featured image, linked entries, extra images.
+- **Categories**: name, slug, description, sort order.
+- **Images**: upload to Supabase Storage bucket `images` (path prefix `codex/`). Create the bucket and allow authenticated upload + public read.
+- **Export**: “Download database” on Codex Admin downloads a JSON file of all categories, entries, links, and entry images.
 
 ## Next steps
 
 - Wire blog list and post pages to `blog_posts` and add admin forms.
-- Wire codex list and entry pages to `codex_entries` / `codex_categories`, add linking and images.
 - Add search (Supabase full-text or external) for blog and codex.
 - Add more ornate styling and embellishments to match the fantasy theme.

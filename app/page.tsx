@@ -15,23 +15,23 @@ export default function HomePage() {
       <section className="grid sm:grid-cols-2 gap-6">
         <Link
           href="/blog"
-          className="ornament-border rounded-lg p-6 bg-alterun-bg-card hover:border-alterun-gold/30 transition-colors group"
+          className="ornament-border rounded-lg p-6 bg-alterun-bg-card hover:border-alterun-gold/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group"
         >
-          <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-2 group-hover:text-alterun-gold-muted transition-colors">
+          <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-2 group-hover:text-alterun-gold-muted transition-colors duration-200">
             Blog
           </h2>
-          <p className="text-alterun-muted text-sm">
+          <p className="text-alterun-muted text-base">
             News, updates, and musings from the world of Alterun.
           </p>
         </Link>
         <Link
           href="/codex"
-          className="ornament-border rounded-lg p-6 bg-alterun-bg-card hover:border-alterun-gold/30 transition-colors group"
+          className="ornament-border rounded-lg p-6 bg-alterun-bg-card hover:border-alterun-gold/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group"
         >
-          <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-2 group-hover:text-alterun-gold-muted transition-colors">
+          <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-2 group-hover:text-alterun-gold-muted transition-colors duration-200">
             Codex
           </h2>
-          <p className="text-alterun-muted text-sm">
+          <p className="text-alterun-muted text-base">
             The Codex — people, places, factions, and lore of Alterun.
           </p>
         </Link>

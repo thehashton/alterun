@@ -22,7 +22,7 @@ export default async function AdminLoginPage() {
       <h1 className="font-display text-2xl text-alterun-gold uppercase tracking-widest mb-2 text-center">
         Admin Login
       </h1>
-      <p className="text-alterun-muted text-sm text-center mb-8">
+      <p className="text-alterun-muted text-base text-center mb-8">
         Sign in with your email to manage Alterun.
       </p>
       <LoginForm />

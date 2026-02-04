@@ -19,11 +19,12 @@
 @layer base {
   html {
     @apply scroll-smooth;
+    font-size: 16px;
     margin: 0;
     padding: 0;
   }
   body {
-    @apply bg-alterun-bg text-alterun-muted font-body antialiased;
+    @apply bg-alterun-bg text-alterun-muted font-body antialiased text-base;
     margin: 0;
     padding: 0;
   }
@@ -97,16 +98,42 @@ body > header:first-of-type {
     box-shadow 0.2s ease-out;
 }
 .border-button-press-fixed:hover {
-  transform: translateX(-50%) translateY(1.5px) scale(0.995);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+  transform: translateX(-50%) translateY(0.75px) scale(0.998);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 .border-button-press-fixed:active {
-  transform: translateX(-50%) translateY(2.5px) scale(0.99);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%) translateY(1.5px) scale(0.996);
+  box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Ornamental border utility */
+/* Codex button in flow (scrolls with page) — same press animation, no translateX */
+.border-button-press-inline {
+  transition:
+    transform 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+}
+.border-button-press-inline:hover {
+  transform: translateY(0.75px) scale(0.998);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+.border-button-press-inline:active {
+  transform: translateY(1.5px) scale(0.996);
+  box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Button hover animation — use with transition-all duration-200 */
 @layer components {
+  .btn-hover {
+    @apply transition-all duration-200 ease-out;
+  }
+  .btn-hover:hover:not(:disabled) {
+    transform: translateY(-1px);
+    @apply shadow-md;
+  }
+  .btn-hover:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
   .ornament-border {
     @apply border border-alterun-border relative;
     box-shadow:

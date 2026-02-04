@@ -4,20 +4,24 @@ import logo from "@/images/Alterun-logo.png";
 import headerBgImg from "@/images/alterun-header-bg.png";
 import headerBorderImg from "@/images/alterun-header-border.png";
 import headerTopBorderImg from "@/images/alterun-top-border.png";
+import { SignOutButton } from "@/components/SignOutButton";
+import type { User } from "@supabase/supabase-js";
 
 const navLeft = [
   { href: "/", label: "Home" },
   { href: "/blog", label: "Blog" },
 ];
 
-const navRight = [{ href: "/admin/login", label: "Login" }];
-
 const navLinkClass =
-  "text-base sm:text-lg uppercase tracking-wider text-alterun-muted hover:text-alterun-gold transition-colors whitespace-nowrap";
+  "text-lg sm:text-xl uppercase tracking-wider text-alterun-muted hover:text-alterun-gold transition-colors duration-200 whitespace-nowrap";
 
-export function Header() {
+type Props = {
+  user?: User | null;
+};
+
+export function Header({ user = null }: Props) {
   return (
-    <header className="backdrop-blur-sm sticky top-0 z-50 pt-0 mt-0 bg-alterun-header-top overflow-visible">
+    <header className="backdrop-blur-sm pt-0 mt-0 bg-alterun-header-top overflow-visible">
       <div
         className="w-full h-14 sm:h-14 bg-repeat-x overflow-hidden bg-alterun-header-top [box-shadow:inset_0_1px_0_0_var(--color-bg-header-top)]"
         style={{
@@ -77,11 +81,13 @@ export function Header() {
           />
         </Link>
         <nav className="flex-1 min-w-0 flex items-center justify-end gap-3 sm:gap-8">
-          {navRight.map(({ href, label }) => (
-            <Link key={href} href={href} className={navLinkClass}>
-              {label}
+          {user ? (
+            <SignOutButton label="Logout" className={navLinkClass} />
+          ) : (
+            <Link href="/admin/login" className={navLinkClass}>
+              Login
             </Link>
-          ))}
+          )}
         </nav>
         </div>
       </div>

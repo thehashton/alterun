@@ -5,17 +5,17 @@ import Image from "next/image";
 import borderBottomCentralImg from "@/images/border-bottom-central.png";
 
 /**
- * Rendered in layout with position:fixed and z-[9999]. Uses the central
- * border image and is sized to fit the middle of the bottom border strip.
+ * Rendered in layout below the header. Uses the central border image and
+ * is sized to fit the middle of the bottom border strip. Scrolls with the page.
  */
 export function HeaderBorderButton() {
   return (
-    <Link
-      href="/codex"
-      aria-label="Codex"
-      className="border-button-press-fixed fixed left-1/2 z-[9999] flex h-24 w-[28rem] max-w-[95vw] items-center justify-center overflow-hidden rounded-sm bg-alterun-bg-card/50 shadow-[0_2px_8px_rgba(0,0,0,0.4)] sm:h-28 sm:w-[40rem] sm:max-w-[95vw]"
-      style={{ top: "9.6rem" }}
-    >
+    <div className="flex justify-center -mt-8 sm:-mt-10">
+      <Link
+        href="/codex"
+        aria-label="Codex"
+        className="border-button-press-inline relative flex h-24 w-[28rem] max-w-[95vw] items-center justify-center overflow-hidden rounded-sm bg-alterun-bg-card/50 shadow-[0_2px_8px_rgba(0,0,0,0.4)] sm:h-28 sm:w-[40rem] sm:max-w-[95vw]"
+      >
       <Image
         src={borderBottomCentralImg}
         alt=""
@@ -33,6 +33,7 @@ export function HeaderBorderButton() {
       >
         Codex
       </span>
-    </Link>
+      </Link>
+    </div>
   );
 }

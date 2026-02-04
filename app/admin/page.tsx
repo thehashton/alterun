@@ -28,23 +28,23 @@ export default async function AdminPage() {
       <div className="grid sm:grid-cols-2 gap-6">
         <Link
           href="/admin/blog"
-          className="ornament-border rounded-lg p-6 bg-alterun-bg-card hover:border-alterun-gold/30 transition-colors"
+          className="ornament-border rounded-lg p-6 bg-alterun-bg-card hover:border-alterun-gold/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
         >
           <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider">
             Blog
           </h2>
-          <p className="text-alterun-muted text-sm mt-1">
+          <p className="text-alterun-muted text-base mt-1">
             Create and edit blog posts.
           </p>
         </Link>
         <Link
           href="/admin/codex"
-          className="ornament-border rounded-lg p-6 bg-alterun-bg-card hover:border-alterun-gold/30 transition-colors"
+          className="ornament-border rounded-lg p-6 bg-alterun-bg-card hover:border-alterun-gold/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
         >
           <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider">
             Codex
           </h2>
-          <p className="text-alterun-muted text-sm mt-1">
+          <p className="text-alterun-muted text-base mt-1">
             Add and edit Codex entries, categories, and images.
           </p>
         </Link>

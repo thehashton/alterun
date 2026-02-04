@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="images/alterun-logo-detailed-no-bg.png" alt="Alterun" width="480" />
+</p>
+
 # Alterun
 
 The world of Alterun — a Next.js site with a blog (Martin/Sanderson style) and a **Codex** (wiki-style lore) with a dark fantasy theme. Admin dashboard with Supabase email auth.

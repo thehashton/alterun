@@ -44,12 +44,12 @@ const config: Config = {
           "100%": { opacity: "0" },
         },
         "lightbox-content": {
-          "0%": { opacity: "0", transform: "scale(0.96)" },
-          "100%": { opacity: "1", transform: "scale(1)" },
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
         "lightbox-content-out": {
-          "0%": { opacity: "1", transform: "scale(1)" },
-          "100%": { opacity: "0", transform: "scale(0.96)" },
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
         },
       },
       animation: {

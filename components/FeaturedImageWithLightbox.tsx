@@ -122,6 +122,8 @@ export function FeaturedImageWithLightbox({
   const handlePointerDown = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
       if (zoom <= 1) return;
+      if ("button" in e && e.button !== 0) return; // left click only for mouse
+      e.preventDefault();
       const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
       const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
       dragRef.current = { startX: clientX, startY: clientY, startPanX: pan.x, startPanY: pan.y };
@@ -153,10 +155,16 @@ export function FeaturedImageWithLightbox({
     setIsDragging(false);
   }, []);
 
+  // Reset zoom/pan only when lightbox first opens (not on every re-render)
+  useEffect(() => {
+    if (open) {
+      setZoom(1);
+      setPan({ x: 0, y: 0 });
+    }
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
-    setZoom(1);
-    setPan({ x: 0, y: 0 });
     const onEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
     };
@@ -258,6 +266,7 @@ export function FeaturedImageWithLightbox({
               <button
                 ref={zoomOutBtnRef}
                 type="button"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); zoomOut(); }}
                 disabled={zoom <= MIN_ZOOM || isClosing}
                 className="rounded p-2 text-alterun-muted hover:bg-alterun-gold/15 hover:text-alterun-gold disabled:opacity-40 disabled:pointer-events-none transition-colors touch-manipulation cursor-pointer"
                 aria-label="Zoom out"
@@ -272,6 +281,7 @@ export function FeaturedImageWithLightbox({
               <button
                 ref={zoomInBtnRef}
                 type="button"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); zoomIn(); }}
                 disabled={zoom >= MAX_ZOOM || isClosing}
                 className="rounded p-2 text-alterun-muted hover:bg-alterun-gold/15 hover:text-alterun-gold disabled:opacity-40 disabled:pointer-events-none transition-colors touch-manipulation cursor-pointer"
                 aria-label="Zoom in"

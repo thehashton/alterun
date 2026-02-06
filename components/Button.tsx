@@ -16,22 +16,22 @@ export type ButtonVariant = StyleVariant | ImageVariant;
 
 const styleVariantClasses: Record<StyleVariant, string> = {
   primary:
-    "btn-hover rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-base font-display uppercase tracking-wider text-alterun-gold transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold hover:bg-alterun-gold/25",
+    "btn-hover rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-xl font-display uppercase tracking-wider text-alterun-gold transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold hover:bg-alterun-gold/25",
   secondary:
-    "btn-hover rounded border border-alterun-border bg-alterun-bg-card px-4 py-2 text-base text-alterun-muted transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold/50 hover:bg-alterun-gold/10 hover:text-alterun-gold",
+    "btn-hover rounded border border-alterun-border bg-alterun-bg-card px-4 py-2 text-xl text-alterun-muted transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold/50 hover:bg-alterun-gold/10 hover:text-alterun-gold",
   danger:
-    "btn-hover rounded border border-red-500/50 bg-red-500/10 px-4 py-2 text-base text-red-400 hover:bg-red-500/20 hover:border-red-500/70 hover:shadow-md",
+    "btn-hover rounded border border-red-500/50 bg-red-500/10 px-4 py-2 text-xl text-red-400 hover:bg-red-500/20 hover:border-red-500/70 hover:shadow-md",
   ghost:
-    "btn-hover rounded border border-alterun-border px-4 py-2 text-base text-alterun-muted hover:border-alterun-gold/30 hover:text-alterun-gold/90",
+    "btn-hover rounded border border-alterun-border px-4 py-2 text-xl text-alterun-muted hover:border-alterun-gold/30 hover:text-alterun-gold/90",
   search:
-    "btn-hover rounded border border-alterun-gold/50 bg-alterun-gold/15 px-4 py-2.5 font-display text-base uppercase tracking-wider text-alterun-gold hover:bg-alterun-gold/25 hover:shadow-[0_0_12px_rgba(201,162,39,0.12)] hover:border-alterun-gold/60",
+    "btn-hover rounded border border-alterun-gold/50 bg-alterun-gold/15 px-4 py-2.5 font-display text-xl uppercase tracking-wider text-alterun-gold hover:bg-alterun-gold/25 hover:shadow-[0_0_12px_rgba(201,162,39,0.12)] hover:border-alterun-gold/60",
   login:
-    "btn-hover w-full py-2.5 px-4 bg-alterun-gold/20 border border-alterun-gold/50 text-base text-alterun-gold uppercase tracking-wider rounded hover:bg-alterun-gold/30 hover:border-alterun-gold/60 hover:shadow-md",
+    "btn-hover w-full py-2.5 px-4 bg-alterun-gold/20 border border-alterun-gold/50 text-xl text-alterun-gold uppercase tracking-wider rounded hover:bg-alterun-gold/30 hover:border-alterun-gold/60 hover:shadow-md",
 };
 
 const imageVariantAssets: Record<
   ImageVariant,
-  { src: typeof borderBottomCentralImg; wrapperClass: string; sizes: string }
+  { src: typeof borderBottomCentralImg; wrapperClass: string; compactClass?: string; sizes: string }
 > = {
   codex: {
     src: borderBottomCentralImg,
@@ -43,12 +43,16 @@ const imageVariantAssets: Record<
     src: buttonStoneVinesImg,
     wrapperClass:
       "border-button-press-inline relative flex h-[4.5rem] w-56 min-w-[12rem] items-center justify-center overflow-hidden rounded-sm bg-alterun-bg-card/50 shadow-[0_2px_8px_rgba(0,0,0,0.4)] sm:h-20 sm:w-64",
+    compactClass:
+      "border-button-press-inline relative flex h-11 w-36 min-w-[8rem] items-center justify-center overflow-hidden rounded-sm bg-alterun-bg-card/50 shadow-[0_2px_6px_rgba(0,0,0,0.35)]",
     sizes: "16rem",
   },
   stoneVinesCrown: {
     src: buttonStoneVinesCrownImg,
     wrapperClass:
       "border-button-press-inline relative flex h-[4.5rem] w-56 min-w-[12rem] items-center justify-center overflow-hidden rounded-sm bg-alterun-bg-card/50 shadow-[0_2px_8px_rgba(0,0,0,0.4)] sm:h-20 sm:w-64",
+    compactClass:
+      "border-button-press-inline relative flex h-11 w-36 min-w-[8rem] items-center justify-center overflow-hidden rounded-sm bg-alterun-bg-card/50 shadow-[0_2px_6px_rgba(0,0,0,0.35)]",
     sizes: "16rem",
   },
 };
@@ -66,6 +70,10 @@ function getImageButtonLabel(children: React.ReactNode): string {
 
 type BaseProps = {
   variant?: ButtonVariant;
+  /** For stone image variants only: "compact" fits in header/nav. */
+  size?: "default" | "compact";
+  /** For image variants: "darker" applies a filter so the background image appears darker. */
+  imageFilter?: "normal" | "darker";
   children: React.ReactNode;
   className?: string;
   disabled?: boolean;
@@ -87,6 +95,8 @@ export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 export function Button({
   variant = "primary",
+  size = "default",
+  imageFilter = "normal",
   children,
   className = "",
   disabled = false,
@@ -99,6 +109,8 @@ export function Button({
 
   if (imageVariant) {
     const asset = imageVariantAssets[imageVariant];
+    const useCompact = size === "compact" && (imageVariant === "stoneVines" || imageVariant === "stoneVinesCrown");
+    const wrapperClass = useCompact && asset.compactClass ? asset.compactClass : asset.wrapperClass;
     const label = getImageButtonLabel(children);
     const textShadow =
       "0 0 12px rgba(201,162,39,0.6), 0 0 4px rgba(0,0,0,1), 0 1px 4px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.7)";
@@ -106,8 +118,12 @@ export function Button({
     const isStoneVariant = imageVariant === "stoneVines" || imageVariant === "stoneVinesCrown";
     const textWrapperClass =
       "absolute inset-0 z-10 flex items-center justify-center p-3 sm:p-4";
+    const isCompact = useCompact && isStoneVariant;
+    const imageClass = imageFilter === "darker"
+      ? "object-contain object-center brightness-90 contrast-105"
+      : "object-contain object-center";
     const textClass = isStoneVariant
-      ? "font-display text-sm font-semibold uppercase tracking-widest text-alterun-gold sm:text-base leading-tight text-center break-words line-clamp-2 max-w-full"
+      ? `font-display font-semibold uppercase tracking-widest text-alterun-gold leading-tight text-center break-words line-clamp-2 max-w-full ${isCompact ? "text-base" : "text-xl"}`
       : "font-display text-xl font-semibold uppercase tracking-widest text-alterun-gold sm:text-2xl text-center truncate max-w-full";
 
     const content = (
@@ -116,7 +132,7 @@ export function Button({
           src={asset.src}
           alt=""
           fill
-          className="object-contain object-center"
+          className={imageClass}
           sizes={asset.sizes}
           priority={false}
         />
@@ -130,13 +146,13 @@ export function Button({
 
     if (href) {
       return (
-        <Link href={href} className={`${asset.wrapperClass} ${className}`} aria-label={label}>
+        <Link href={href} className={`${wrapperClass} ${className}`} aria-label={label}>
           {content}
         </Link>
       );
     }
     return (
-      <button type={type} className={`${asset.wrapperClass} ${className}`} onClick={onClick} disabled={disabled} aria-label={label}>
+      <button type={type} className={`${wrapperClass} ${className}`} onClick={onClick} disabled={disabled} aria-label={label}>
         {content}
       </button>
     );

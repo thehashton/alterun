@@ -33,7 +33,7 @@ export default async function AdminPage() {
           <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider">
             Blog
           </h2>
-          <p className="text-alterun-muted text-base mt-1">
+          <p className="text-alterun-muted text-xl mt-1">
             Create and edit blog posts.
           </p>
         </Link>
@@ -44,7 +44,7 @@ export default async function AdminPage() {
           <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider">
             Codex
           </h2>
-          <p className="text-alterun-muted text-base mt-1">
+          <p className="text-alterun-muted text-xl mt-1">
             Add and edit Codex entries, categories, and images.
           </p>
         </Link>

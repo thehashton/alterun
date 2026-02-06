@@ -4,7 +4,7 @@ import logo from "@/images/Alterun-logo.png";
 import headerBgImg from "@/images/alterun-header-bg.png";
 import headerBorderImg from "@/images/alterun-header-border.png";
 import headerTopBorderImg from "@/images/alterun-top-border.png";
-import { SignOutButton } from "@/components/SignOutButton";
+import { HeaderAuth } from "@/components/HeaderAuth";
 import type { User } from "@supabase/supabase-js";
 
 const navLeft = [
@@ -13,7 +13,7 @@ const navLeft = [
 ];
 
 const navLinkClass =
-  "text-lg sm:text-xl uppercase tracking-wider text-alterun-muted hover:text-alterun-gold transition-colors duration-200 whitespace-nowrap";
+  "text-2xl uppercase tracking-wider text-alterun-muted hover:text-alterun-gold transition-colors duration-200 whitespace-nowrap";
 
 type Props = {
   user?: User | null;
@@ -81,13 +81,7 @@ export function Header({ user = null }: Props) {
           />
         </Link>
         <nav className="flex-1 min-w-0 flex items-center justify-end gap-3 sm:gap-8">
-          {user ? (
-            <SignOutButton label="Logout" className={navLinkClass} />
-          ) : (
-            <Link href="/admin/login" className={navLinkClass}>
-              Login
-            </Link>
-          )}
+          <HeaderAuth initialUser={user} />
         </nav>
         </div>
       </div>

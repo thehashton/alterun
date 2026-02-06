@@ -23,7 +23,7 @@ export default async function AdminCodexPage() {
   ]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-xl">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <h1 className="font-display text-3xl text-alterun-gold uppercase tracking-widest">
           Codex Admin
@@ -31,14 +31,14 @@ export default async function AdminCodexPage() {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/admin/codex/entries/new"
-            className="btn-hover flex items-center gap-2 rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-base text-alterun-gold transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold hover:bg-alterun-gold/25 hover:text-alterun-gold"
+            className="btn-hover flex items-center gap-2 rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-xl text-alterun-gold transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold hover:bg-alterun-gold/25 hover:text-alterun-gold"
           >
             <IconNewEntry className="h-5 w-5 flex-shrink-0" />
             New entry
           </Link>
           <Link
             href="/admin/codex/categories"
-            className="btn-hover flex items-center gap-2 rounded border border-alterun-border bg-alterun-bg-card px-4 py-2 text-base text-alterun-muted transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold/50 hover:bg-alterun-gold/10 hover:text-alterun-gold"
+            className="btn-hover flex items-center gap-2 rounded border border-alterun-border bg-alterun-bg-card px-4 py-2 text-xl text-alterun-muted transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold/50 hover:bg-alterun-gold/10 hover:text-alterun-gold"
           >
             <IconCategories className="h-5 w-5 flex-shrink-0" />
             Categories
@@ -48,11 +48,11 @@ export default async function AdminCodexPage() {
       </div>
 
       <section className="mb-10">
-        <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider mb-4">
+        <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-4">
           Categories ({categories.length})
         </h2>
         {categories.length === 0 ? (
-          <p className="text-alterun-muted text-sm">
+          <p className="text-alterun-muted text-xl">
             No categories yet.{" "}
             <Link href="/admin/codex/categories" className="text-alterun-gold/80 hover:text-alterun-gold">
               Add one
@@ -75,11 +75,11 @@ export default async function AdminCodexPage() {
       </section>
 
       <section>
-        <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider mb-4">
+        <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-4">
           Entries ({entries.length})
         </h2>
         {entries.length === 0 ? (
-          <p className="text-alterun-muted text-sm">
+          <p className="text-alterun-muted text-xl">
             No entries yet.{" "}
             <Link href="/admin/codex/entries/new" className="text-alterun-gold/80 hover:text-alterun-gold">
               Create one
@@ -89,25 +89,43 @@ export default async function AdminCodexPage() {
           <ul className="space-y-2">
             {entries.map((entry) => (
               <li key={entry.id}>
-                <Link
-                  href={`/admin/codex/entries/${entry.id}`}
-                  className="ornament-border flex items-center gap-4 rounded-lg p-4 bg-alterun-bg-card hover:border-alterun-gold/30 transition-colors"
-                >
+                <div className="ornament-border flex flex-wrap items-center gap-4 rounded-lg p-4 bg-alterun-bg-card hover:border-alterun-gold/30 transition-colors">
                   {entry.featured_image_url && (
                     <div className="relative h-12 w-16 flex-shrink-0 rounded overflow-hidden bg-alterun-bg-elevated">
                       <img
                         src={entry.featured_image_url}
                         alt=""
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover object-top"
                       />
                     </div>
                   )}
-                  <span className="font-display text-alterun-gold">{entry.title}</span>
-                  <span className="text-alterun-muted text-sm">
-                    {categories.find((c) => c.id === entry.category_id)?.name ?? "—"}
-                  </span>
-                  <span className="text-alterun-muted text-sm ml-auto">{entry.slug}</span>
-                </Link>
+                  <Link
+                    href={`/admin/codex/entries/${entry.id}`}
+                    className="min-w-0 flex-1 flex items-center gap-4 flex-wrap"
+                  >
+                    <span className="font-display text-alterun-gold">{entry.title}</span>
+                    <span className="text-alterun-muted text-xl">
+                      {categories.find((c) => c.id === entry.category_id)?.name ?? "—"}
+                    </span>
+                    <span className="text-alterun-muted text-xl">{entry.slug}</span>
+                  </Link>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Link
+                      href={`/codex/${entry.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded border border-alterun-border px-3 py-1.5 text-lg text-alterun-muted hover:border-alterun-gold/40 hover:text-alterun-gold transition-colors"
+                    >
+                      Preview
+                    </Link>
+                    <Link
+                      href={`/admin/codex/entries/${entry.id}`}
+                      className="rounded border border-alterun-gold/40 bg-alterun-gold/10 px-3 py-1.5 text-lg text-alterun-gold hover:bg-alterun-gold/20 hover:border-alterun-gold/50 transition-colors"
+                    >
+                      Edit
+                    </Link>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>

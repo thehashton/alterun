@@ -30,7 +30,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 ornament-border rounded-lg p-8 bg-alterun-bg-card">
       <div>
-        <label htmlFor="email" className="block text-base uppercase tracking-wider text-alterun-muted mb-2">
+        <label htmlFor="email" className="block text-xl uppercase tracking-wider text-alterun-muted mb-2">
           Email
         </label>
         <input
@@ -44,7 +44,7 @@ export function LoginForm() {
         />
       </div>
       <div>
-        <label htmlFor="password" className="block text-base uppercase tracking-wider text-alterun-muted mb-2">
+        <label htmlFor="password" className="block text-xl uppercase tracking-wider text-alterun-muted mb-2">
           Password
         </label>
         <input
@@ -58,7 +58,7 @@ export function LoginForm() {
       </div>
       {message && (
         <p
-          className={`text-base ${
+          className={`text-xl ${
             message.type === "error" ? "text-red-400" : "text-alterun-gold-muted"
           }`}
         >
@@ -68,7 +68,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="btn-hover w-full py-2.5 px-4 bg-alterun-gold/20 border border-alterun-gold/50 text-base text-alterun-gold uppercase tracking-wider rounded hover:bg-alterun-gold/30 hover:border-alterun-gold/60 hover:shadow-md disabled:opacity-50"
+        className="btn-hover w-full py-2.5 px-4 bg-alterun-gold/20 border border-alterun-gold/50 text-xl text-alterun-gold uppercase tracking-wider rounded hover:bg-alterun-gold/30 hover:border-alterun-gold/60 hover:shadow-md disabled:opacity-50"
       >
         {loading ? "Signing in…" : "Sign in"}
       </button>

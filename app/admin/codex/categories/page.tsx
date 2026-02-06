@@ -19,11 +19,11 @@ export default async function AdminCodexCategoriesPage() {
   const categories = await getCodexCategories();
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-xl">
       <nav className="mb-6">
         <Link
           href="/admin/codex"
-          className="text-alterun-gold/80 hover:text-alterun-gold text-sm uppercase tracking-wider"
+          className="text-alterun-gold/80 hover:text-alterun-gold text-xl uppercase tracking-wider"
         >
           ← Codex Admin
         </Link>
@@ -33,18 +33,18 @@ export default async function AdminCodexCategoriesPage() {
       </h1>
 
       <section className="mb-10">
-        <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider mb-4">
+        <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-4">
           New category
         </h2>
         <CategoryForm />
       </section>
 
       <section>
-        <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider mb-4">
+        <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-4">
           Existing ({categories.length})
         </h2>
         {categories.length === 0 ? (
-          <p className="text-alterun-muted text-sm">No categories yet.</p>
+          <p className="text-alterun-muted text-xl">No categories yet.</p>
         ) : (
           <ul className="space-y-3">
             {categories.map((cat) => (
@@ -54,9 +54,9 @@ export default async function AdminCodexCategoriesPage() {
                   className="ornament-border block rounded-lg p-4 bg-alterun-bg-card hover:border-alterun-gold/30 transition-colors"
                 >
                   <span className="font-display text-alterun-gold">{cat.name}</span>
-                  <span className="text-alterun-muted text-sm ml-2">/{cat.slug}</span>
+                  <span className="text-alterun-muted text-xl ml-2">/{cat.slug}</span>
                   {cat.description && (
-                    <p className="text-alterun-muted text-sm mt-1">{cat.description}</p>
+                    <p className="text-alterun-muted text-xl mt-1">{cat.description}</p>
                   )}
                 </Link>
               </li>

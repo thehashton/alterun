@@ -1,6 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
+import { createClient } from "@/lib/supabase/server";
 import { getCodexCategories, getCodexEntries } from "@/lib/codex/queries";
-import { IconPlus } from "@/components/icons";
+import { IconPlus, IconEye, IconPencil } from "@/components/icons";
 import { CodexSearchForm } from "./CodexSearchForm";
 
 export const metadata = {
@@ -16,6 +18,11 @@ export default async function CodexPage({ searchParams }: Props) {
   const params = await searchParams;
   const categorySlug = params.category ?? undefined;
   const search = params.q ?? undefined;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const [categories, entries] = await Promise.all([
     getCodexCategories(),
@@ -34,17 +41,19 @@ export default async function CodexPage({ searchParams }: Props) {
             Browse by realm or search the lore.
           </p>
         </div>
-        <Link
-          href="/admin/codex/entries/new"
-          className="btn-hover flex shrink-0 items-center gap-2 rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-base font-display uppercase tracking-wider text-alterun-gold transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold hover:bg-alterun-gold/25"
-        >
-          <IconPlus className="h-5 w-5 flex-shrink-0" />
-          Add entry
-        </Link>
+        {user && (
+          <Link
+            href="/admin/codex/entries/new"
+            className="btn-hover flex shrink-0 items-center gap-2 rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-xl font-display uppercase tracking-wider text-alterun-gold transition-[border-color,background-color,color] duration-200 hover:border-alterun-gold hover:bg-alterun-gold/25"
+          >
+            <IconPlus className="h-5 w-5 flex-shrink-0" />
+            Add entry
+          </Link>
+        )}
       </header>
 
       <section className="ornament-border rounded-lg border-l-2 border-l-alterun-gold/30 bg-alterun-bg-card p-5 sm:p-6 mb-10">
-        <h2 className="font-display text-sm text-alterun-gold uppercase tracking-widest mb-1">
+        <h2 className="font-display text-xl text-alterun-gold uppercase tracking-widest mb-1">
           Consult the index
         </h2>
         <span className="block h-px w-12 bg-alterun-gold/30 mb-4" aria-hidden />
@@ -58,14 +67,14 @@ export default async function CodexPage({ searchParams }: Props) {
 
       {categories.length > 0 && (
         <nav className="mb-10" aria-label="Codex categories">
-          <h2 className="font-display text-sm text-alterun-gold uppercase tracking-widest mb-3">
+          <h2 className="font-display text-xl text-alterun-gold uppercase tracking-widest mb-3">
             Realms
           </h2>
           <span className="block h-px w-12 bg-alterun-gold/30 mb-3" aria-hidden />
           <div className="flex flex-wrap gap-2">
             <Link
               href="/codex"
-              className={`ornament-border rounded px-4 py-2 text-base font-display uppercase tracking-wider transition-all duration-200 ${
+              className={`ornament-border rounded px-4 py-2 text-xl font-display uppercase tracking-wider transition-all duration-200 ${
                 !categorySlug
                   ? "bg-alterun-gold/15 text-alterun-gold border-alterun-gold/50 shadow-[0_0_12px_rgba(201,162,39,0.12)]"
                   : "bg-alterun-bg-card text-alterun-muted hover:border-alterun-gold/30 hover:text-alterun-gold/90"
@@ -77,7 +86,7 @@ export default async function CodexPage({ searchParams }: Props) {
               <Link
                 key={cat.id}
                 href={`/codex?category=${encodeURIComponent(cat.slug)}`}
-                className={`ornament-border rounded px-4 py-2 text-base font-display uppercase tracking-wider transition-all duration-200 ${
+                className={`ornament-border rounded px-4 py-2 text-xl font-display uppercase tracking-wider transition-all duration-200 ${
                   categorySlug === cat.slug
                     ? "bg-alterun-gold/15 text-alterun-gold border-alterun-gold/50 shadow-[0_0_12px_rgba(201,162,39,0.12)]"
                     : "bg-alterun-bg-card text-alterun-muted hover:border-alterun-gold/30 hover:text-alterun-gold/90"
@@ -91,16 +100,10 @@ export default async function CodexPage({ searchParams }: Props) {
       )}
 
       <section>
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-          <h2 className="font-display text-sm text-alterun-gold uppercase tracking-widest">
+        <div className="mb-3">
+          <h2 className="font-display text-xl text-alterun-gold uppercase tracking-widest">
             Chronicles
           </h2>
-          <Link
-            href="/admin/codex/entries/new"
-            className="text-sm font-display uppercase tracking-wider text-alterun-gold-muted hover:text-alterun-gold transition-colors"
-          >
-            + Add entry
-          </Link>
         </div>
         <span className="block h-px w-12 bg-alterun-gold/30 mb-4" aria-hidden />
 
@@ -114,24 +117,60 @@ export default async function CodexPage({ searchParams }: Props) {
           <ul className="space-y-4">
             {entries.map((entry) => (
               <li key={entry.id}>
-                <Link
-                  href={`/codex/${entry.slug}`}
-                  className="codex-entry-card ornament-border block rounded-lg border-l-2 border-l-alterun-gold/25 p-4 sm:p-5 bg-alterun-bg-card transition-all duration-200 hover:border-alterun-gold/40 hover:border-l-alterun-gold/50 hover:shadow-[0_0_20px_-4px_rgba(201,162,39,0.08)] hover:-translate-y-0.5"
-                >
-                  <h3 className="font-display text-lg text-alterun-gold uppercase tracking-wider">
-                    {entry.title}
-                  </h3>
-                  {entry.excerpt && (
-                    <p className="text-alterun-muted text-base mt-1 line-clamp-2">
-                      {entry.excerpt}
-                    </p>
-                  )}
-                  {entry.category_id && (
-                    <span className="inline-block mt-2 text-base text-alterun-gold-muted/80 font-display uppercase tracking-wider">
-                      {categories.find((c) => c.id === entry.category_id)?.name}
-                    </span>
-                  )}
-                </Link>
+                <div className="codex-entry-card ornament-border flex flex-wrap items-stretch gap-4 rounded-lg border-l-2 border-l-alterun-gold/25 p-4 sm:p-5 bg-alterun-bg-card transition-all duration-200 hover:border-alterun-gold/40 hover:border-l-alterun-gold/50 hover:shadow-[0_0_20px_-4px_rgba(201,162,39,0.08)] hover:-translate-y-0.5">
+                  <Link
+                    href={`/codex/${entry.slug}`}
+                    className="min-w-0 flex-1 flex gap-4 items-start"
+                  >
+                    {entry.featured_image_url && (
+                      <div className="relative h-20 w-28 flex-shrink-0 rounded overflow-hidden bg-alterun-bg-elevated">
+                        <Image
+                          src={entry.featured_image_url}
+                          alt=""
+                          fill
+                          className="object-cover object-top"
+                          sizes="112px"
+                          unoptimized
+                        />
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-display text-lg text-alterun-gold uppercase tracking-wider">
+                        {entry.title}
+                      </h3>
+                      {entry.excerpt && (
+                        <p className="text-alterun-muted text-xl mt-1 line-clamp-2">
+                          {entry.excerpt}
+                        </p>
+                      )}
+                      {entry.category_id && (
+                        <span className="inline-block mt-2 text-xl text-alterun-gold-muted/80 font-display uppercase tracking-wider">
+                          {categories.find((c) => c.id === entry.category_id)?.name}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                  <div className="flex items-center gap-2 flex-shrink-0 self-center">
+                    <Link
+                      href={`/codex/${entry.slug}`}
+                      className="rounded p-2 text-alterun-muted hover:bg-alterun-gold/15 hover:text-alterun-gold transition-colors"
+                      title="View entry"
+                      aria-label="View entry"
+                    >
+                      <IconEye className="h-5 w-5" />
+                    </Link>
+                    {user && (
+                      <Link
+                        href={`/admin/codex/entries/${entry.id}`}
+                        className="rounded p-2 text-alterun-muted hover:bg-alterun-gold/15 hover:text-alterun-gold transition-colors"
+                        title="Edit entry"
+                        aria-label="Edit entry"
+                      >
+                        <IconPencil className="h-5 w-5" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
               </li>
             ))}
           </ul>

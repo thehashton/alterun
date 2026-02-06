@@ -34,6 +34,30 @@ const config: Config = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
+      keyframes: {
+        "lightbox-overlay": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "lightbox-overlay-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+        "lightbox-content": {
+          "0%": { opacity: "0", transform: "scale(0.96)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "lightbox-content-out": {
+          "0%": { opacity: "1", transform: "scale(1)" },
+          "100%": { opacity: "0", transform: "scale(0.96)" },
+        },
+      },
+      animation: {
+        "lightbox-overlay": "lightbox-overlay 0.25s ease-out forwards",
+        "lightbox-overlay-out": "lightbox-overlay-out 0.2s ease-in forwards",
+        "lightbox-content": "lightbox-content 0.3s ease-out 0.05s both",
+        "lightbox-content-out": "lightbox-content-out 0.2s ease-in forwards",
+      },
     },
   },
   plugins: [],

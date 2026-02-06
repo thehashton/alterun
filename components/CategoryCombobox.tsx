@@ -90,7 +90,7 @@ export function CategoryCombobox({
   return (
     <div ref={containerRef} className="relative w-full">
       {label && (
-        <label htmlFor={idProp} className="block text-base text-alterun-muted mb-1">
+        <label htmlFor={idProp} className="block text-xl text-alterun-muted mb-1">
           {label}
         </label>
       )}
@@ -108,7 +108,7 @@ export function CategoryCombobox({
         <div className="flex flex-wrap items-center gap-2">
           {displayLabel && !open && (
             <span
-              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-base ${
+              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xl ${
                 isNewCategory
                   ? "border-amber-500/50 bg-amber-500/15 text-amber-200"
                   : "border-alterun-gold/40 bg-alterun-gold/15 text-alterun-gold"
@@ -139,7 +139,7 @@ export function CategoryCombobox({
               onKeyDown={handleKeyDown}
               onFocus={() => setOpen(true)}
               placeholder={displayLabel && !open ? "" : "Search or type a category, then comma…"}
-              className="min-w-[8rem] flex-1 border-0 bg-transparent py-0.5 text-base text-alterun-muted placeholder-alterun-muted/60 focus:outline-none focus:ring-0"
+              className="min-w-[8rem] flex-1 border-0 bg-transparent py-0.5 text-xl text-alterun-muted placeholder-alterun-muted/60 focus:outline-none focus:ring-0"
               aria-autocomplete="list"
               aria-controls={open ? `${idProp}-listbox` : undefined}
             />
@@ -153,14 +153,14 @@ export function CategoryCombobox({
           className="absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded border border-alterun-border bg-alterun-bg-card py-1 shadow-lg"
         >
           {filtered.length === 0 ? (
-            <li className="px-3 py-2 text-base text-alterun-muted">No categories match</li>
+            <li className="px-3 py-2 text-xl text-alterun-muted">No categories match</li>
           ) : (
             filtered.map((c) => (
               <li
                 key={c.id}
                 role="option"
                 aria-selected={value === c.id}
-                className={`cursor-pointer px-3 py-2 text-base transition-colors ${
+                className={`cursor-pointer px-3 py-2 text-xl transition-colors ${
                   value === c.id
                     ? "bg-alterun-gold/15 text-alterun-gold"
                     : "text-alterun-muted hover:bg-alterun-bg-elevated hover:text-alterun-gold/90"

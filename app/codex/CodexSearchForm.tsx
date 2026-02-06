@@ -76,7 +76,7 @@ export function CodexSearchForm({
       <button
         type="submit"
         disabled={isPending}
-        className="btn-hover rounded border border-alterun-gold/50 bg-alterun-gold/15 px-4 py-2.5 font-display text-base uppercase tracking-wider text-alterun-gold hover:bg-alterun-gold/25 hover:shadow-[0_0_12px_rgba(201,162,39,0.12)] hover:border-alterun-gold/60 disabled:opacity-60 disabled:shadow-none"
+        className="btn-hover rounded border border-alterun-gold/50 bg-alterun-gold/15 px-4 py-2.5 font-display text-xl uppercase tracking-wider text-alterun-gold hover:bg-alterun-gold/25 hover:shadow-[0_0_12px_rgba(201,162,39,0.12)] hover:border-alterun-gold/60 disabled:opacity-60 disabled:shadow-none"
       >
         {isPending ? "Searching…" : "Search"}
       </button>

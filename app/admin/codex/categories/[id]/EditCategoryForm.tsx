@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 import { updateCategory, deleteCategory } from "@/lib/codex/actions";
 import type { CodexCategory } from "@/lib/codex/types";
 
@@ -22,8 +23,10 @@ export function EditCategoryForm({ category }: Props) {
     const result = await updateCategory(category.id, new FormData(form));
     if (result.error) {
       setError(result.error);
+      toast.error(result.error);
       return;
     }
+    toast.success("Category saved.");
     router.refresh();
     router.push("/admin/codex/categories");
   }
@@ -35,18 +38,20 @@ export function EditCategoryForm({ category }: Props) {
     const result = await deleteCategory(category.id);
     if (result.error) {
       setError(result.error);
+      toast.error(result.error);
       setDeleting(false);
       return;
     }
+    toast.success("Category deleted.");
     router.push("/admin/codex/categories");
   }
 
   return (
-    <div className="space-y-6">
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+    <div className="space-y-6 text-xl">
+      {error && <p className="text-red-400 text-xl">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4 ornament-border rounded-lg p-6 bg-alterun-bg-card">
         <div>
-          <label htmlFor="cat-name" className="block text-sm text-alterun-muted mb-1">Name</label>
+          <label htmlFor="cat-name" className="block text-xl text-alterun-muted mb-1">Name</label>
           <input
             id="cat-name"
             name="name"
@@ -57,7 +62,7 @@ export function EditCategoryForm({ category }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="cat-slug" className="block text-sm text-alterun-muted mb-1">Slug</label>
+          <label htmlFor="cat-slug" className="block text-xl text-alterun-muted mb-1">Slug</label>
           <input
             id="cat-slug"
             name="slug"
@@ -68,7 +73,7 @@ export function EditCategoryForm({ category }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="cat-desc" className="block text-sm text-alterun-muted mb-1">Description</label>
+          <label htmlFor="cat-desc" className="block text-xl text-alterun-muted mb-1">Description</label>
           <textarea
             id="cat-desc"
             name="description"
@@ -78,7 +83,7 @@ export function EditCategoryForm({ category }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="cat-sort" className="block text-sm text-alterun-muted mb-1">Sort order</label>
+          <label htmlFor="cat-sort" className="block text-xl text-alterun-muted mb-1">Sort order</label>
           <input
             id="cat-sort"
             name="sort_order"
@@ -90,25 +95,25 @@ export function EditCategoryForm({ category }: Props) {
         <div className="flex gap-3">
           <button
             type="submit"
-            className="btn-hover rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-base text-alterun-gold hover:bg-alterun-gold/20 hover:border-alterun-gold/50 hover:shadow-md"
+            className="btn-hover rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-xl text-alterun-gold hover:bg-alterun-gold/20 hover:border-alterun-gold/50 hover:shadow-md"
           >
             Save
           </button>
           <Link
             href="/admin/codex/categories"
-            className="btn-hover rounded border border-alterun-border px-4 py-2 text-base text-alterun-muted hover:border-alterun-gold/30 hover:text-alterun-gold/90"
+            className="btn-hover rounded border border-alterun-border px-4 py-2 text-xl text-alterun-muted hover:border-alterun-gold/30 hover:text-alterun-gold/90"
           >
             Cancel
           </Link>
         </div>
       </form>
       <div className="ornament-border rounded-lg p-6 bg-alterun-bg-card border-red-900/30">
-        <h2 className="font-display text-sm text-alterun-gold uppercase tracking-wider mb-2">Danger zone</h2>
+        <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-2">Danger zone</h2>
         <button
           type="button"
           onClick={handleDelete}
           disabled={deleting}
-          className="btn-hover rounded border border-red-500/50 bg-red-500/10 px-4 py-2 text-base text-red-400 hover:bg-red-500/20 hover:border-red-500/70 hover:shadow-md disabled:opacity-60"
+          className="btn-hover rounded border border-red-500/50 bg-red-500/10 px-4 py-2 text-xl text-red-400 hover:bg-red-500/20 hover:border-red-500/70 hover:shadow-md disabled:opacity-60"
         >
           {deleting ? "Deleting…" : "Delete category"}
         </button>

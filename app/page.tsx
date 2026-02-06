@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { HeroLogo } from "@/components/HeroLogo";
+import { ContentDivider } from "@/components/ContentDivider";
 
 export default function HomePage() {
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-4 pb-8 sm:pb-12">
-      <section className="text-center mb-6 mt-6 sm:mt-8">
-        <HeroLogo />
-        <p className="text-alterun-muted text-lg max-w-xl mx-auto mt-2 sm:mt-3">
+    <>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-4">
+        <section className="text-center">
+          <HeroLogo />
+        </section>
+      </div>
+      <ContentDivider variant="stone" className="my-6 sm:my-8" />
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-8 sm:pb-12">
+      <section className="text-center mb-6">
+        <p className="text-alterun-muted text-lg max-w-xl mx-auto">
           Welcome to the world of Alterun — a chronicle of tales, lore, and the
           Codex of its peoples and places.
         </p>
@@ -20,7 +27,7 @@ export default function HomePage() {
           <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-2 group-hover:text-alterun-gold-muted transition-colors duration-200">
             Blog
           </h2>
-          <p className="text-alterun-muted text-base">
+          <p className="text-alterun-muted text-xl">
             News, updates, and musings from the world of Alterun.
           </p>
         </Link>
@@ -31,11 +38,12 @@ export default function HomePage() {
           <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-2 group-hover:text-alterun-gold-muted transition-colors duration-200">
             Codex
           </h2>
-          <p className="text-alterun-muted text-base">
+          <p className="text-alterun-muted text-xl">
             The Codex — people, places, factions, and lore of Alterun.
           </p>
         </Link>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

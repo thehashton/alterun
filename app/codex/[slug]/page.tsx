@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import { createClient } from "@/lib/supabase/server";
 import { getCodexEntryBySlug } from "@/lib/codex/queries";
+import { CodexEntryImageBlock } from "@/components/CodexEntryImageBlock";
+import { FeaturedImageWithLightbox } from "@/components/FeaturedImageWithLightbox";
+import { Button } from "@/components/Button";
 
 export async function generateMetadata({
   params,
@@ -23,22 +26,36 @@ type Props = {
 
 export default async function CodexEntryPage({ params }: Props) {
   const { slug } = await params;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const entry = await getCodexEntryBySlug(slug);
   if (!entry) notFound();
 
   return (
-    <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-      <nav className="mb-6">
+    <article className="max-w-3xl mx-auto px-10 sm:px-16 py-12 sm:py-16">
+      <nav className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/codex"
-          className="text-alterun-gold/80 hover:text-alterun-gold text-sm uppercase tracking-wider"
+          className="text-alterun-gold/80 hover:text-alterun-gold text-xl uppercase tracking-wider"
         >
           ← Codex
         </Link>
+        {user && (
+          <Button
+            href={`/admin/codex/entries/${entry.id}`}
+            variant="stoneVines"
+            size="compact"
+          >
+            Edit
+          </Button>
+        )}
       </nav>
 
       {entry.category && (
-        <p className="text-alterun-muted text-sm uppercase tracking-wider mb-2">
+        <p className="text-alterun-muted text-xl uppercase tracking-wider mb-2">
           {entry.category.name}
         </p>
       )}
@@ -50,41 +67,38 @@ export default async function CodexEntryPage({ params }: Props) {
       )}
 
       {entry.featured_image_url && (
-        <div className="relative aspect-video rounded-lg overflow-hidden mb-8 ornament-border">
-          <Image
-            src={entry.featured_image_url}
-            alt=""
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 672px"
-          />
-        </div>
+        <FeaturedImageWithLightbox
+          src={entry.featured_image_url}
+          alt={entry.featured_image_caption ?? undefined}
+          caption={entry.featured_image_caption}
+          objectPosition={
+            entry.featured_image_position === "bottom"
+              ? "bottom"
+              : entry.featured_image_position === "center"
+                ? "center"
+                : "top"
+          }
+        />
       )}
 
-      <div className="codex-body text-alterun-muted leading-relaxed whitespace-pre-wrap">
-        {entry.body}
-      </div>
+      <div
+        className="codex-body text-alterun-muted leading-relaxed [&_p]:text-xl [&_p]:mb-4 [&_a]:text-alterun-gold [&_a]:underline hover:[&_a]:text-alterun-gold/90 [&_strong]:text-alterun-gold/90 [&_em]:italic [&_u]:underline"
+        dangerouslySetInnerHTML={{ __html: entry.body ?? "" }}
+      />
 
       {entry.images && entry.images.length > 0 && (
         <section className="mt-10 pt-8 border-t border-alterun-border">
           <h2 className="font-display text-lg text-alterun-gold uppercase tracking-wider mb-4">
             Images
           </h2>
-          <ul className="grid gap-6 sm:grid-cols-2">
+          <ul className="grid gap-8 sm:grid-cols-2">
             {entry.images.map((img) => (
               <li key={img.id}>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden ornament-border">
-                  <Image
-                    src={img.url}
-                    alt={img.caption ?? ""}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                  />
-                </div>
-                {img.caption && (
-                  <p className="mt-2 text-sm text-alterun-muted">{img.caption}</p>
-                )}
+                <CodexEntryImageBlock
+                  src={img.url}
+                  caption={img.caption}
+                  alt={img.caption ?? undefined}
+                />
               </li>
             ))}
           </ul>

@@ -34,11 +34,11 @@ export default async function AdminCodexEditEntryPage({ params }: Props) {
   if (!entry) notFound();
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12 text-xl">
       <nav className="mb-6">
         <Link
           href="/admin/codex"
-          className="text-alterun-gold/80 hover:text-alterun-gold text-sm uppercase tracking-wider"
+          className="text-alterun-gold/80 hover:text-alterun-gold text-xl uppercase tracking-wider"
         >
           ← Codex Admin
         </Link>

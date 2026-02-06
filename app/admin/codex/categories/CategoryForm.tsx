@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { createCategory } from "@/lib/codex/actions";
 
 export function CategoryForm() {
@@ -15,19 +16,21 @@ export function CategoryForm() {
     const result = await createCategory(new FormData(form));
     if (result.error) {
       setError(result.error);
+      toast.error(result.error);
       return;
     }
+    toast.success("Category added.");
     router.refresh();
     form.reset();
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 ornament-border rounded-lg p-6 bg-alterun-bg-card">
+    <form onSubmit={handleSubmit} className="space-y-4 ornament-border rounded-lg p-6 bg-alterun-bg-card text-xl">
       {error && (
-        <p className="text-red-400 text-sm">{error}</p>
+        <p className="text-red-400 text-xl">{error}</p>
       )}
       <div>
-        <label htmlFor="cat-name" className="block text-sm text-alterun-muted mb-1">
+        <label htmlFor="cat-name" className="block text-xl text-alterun-muted mb-1">
           Name
         </label>
         <input
@@ -39,7 +42,7 @@ export function CategoryForm() {
         />
       </div>
       <div>
-        <label htmlFor="cat-slug" className="block text-sm text-alterun-muted mb-1">
+        <label htmlFor="cat-slug" className="block text-xl text-alterun-muted mb-1">
           Slug (optional, auto from name)
         </label>
         <input
@@ -51,7 +54,7 @@ export function CategoryForm() {
         />
       </div>
       <div>
-        <label htmlFor="cat-desc" className="block text-sm text-alterun-muted mb-1">
+        <label htmlFor="cat-desc" className="block text-xl text-alterun-muted mb-1">
           Description
         </label>
         <textarea
@@ -62,7 +65,7 @@ export function CategoryForm() {
         />
       </div>
       <div>
-        <label htmlFor="cat-sort" className="block text-sm text-alterun-muted mb-1">
+        <label htmlFor="cat-sort" className="block text-xl text-alterun-muted mb-1">
           Sort order
         </label>
         <input
@@ -75,7 +78,7 @@ export function CategoryForm() {
       </div>
       <button
         type="submit"
-        className="btn-hover rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-base text-alterun-gold hover:bg-alterun-gold/20 hover:border-alterun-gold/50 hover:shadow-md"
+        className="btn-hover rounded border border-alterun-gold/40 bg-alterun-gold/10 px-4 py-2 text-xl text-alterun-gold hover:bg-alterun-gold/20 hover:border-alterun-gold/50 hover:shadow-md"
       >
         Add category
       </button>

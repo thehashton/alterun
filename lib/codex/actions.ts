@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { getCodexExport } from "./queries";
+import { getCodexExport, getCodexEntryById } from "./queries";
 import type { CodexCategory, CodexEntry, CodexEntryImage, CodexLink } from "./types";
 
 const BUCKET = "images";
@@ -80,6 +80,9 @@ export async function createEntry(formData: FormData) {
   const body = (formData.get("body") as string)?.trim() || "";
   const categoryId = (formData.get("category_id") as string)?.trim() || null;
   const featuredImageUrl = (formData.get("featured_image_url") as string)?.trim() || null;
+  const featuredImageCaption = (formData.get("featured_image_caption") as string)?.trim() || null;
+  const featuredImagePosition = (formData.get("featured_image_position") as string)?.trim() || null;
+  const position = featuredImagePosition && ["top", "center", "bottom"].includes(featuredImagePosition) ? featuredImagePosition : "top";
   if (!title || !slug) return { error: "Title is required" };
   const { data, error } = await supabase
     .from("codex_entries")
@@ -90,6 +93,8 @@ export async function createEntry(formData: FormData) {
       body,
       category_id: categoryId || null,
       featured_image_url: featuredImageUrl || null,
+      featured_image_caption: featuredImageCaption || null,
+      featured_image_position: position,
       author_id: user.id,
     })
     .select()
@@ -117,6 +122,9 @@ export async function updateEntry(id: string, formData: FormData) {
   const body = (formData.get("body") as string)?.trim() || "";
   const categoryId = (formData.get("category_id") as string)?.trim() || null;
   const featuredImageUrl = (formData.get("featured_image_url") as string)?.trim() || null;
+  const featuredImageCaption = (formData.get("featured_image_caption") as string)?.trim() || null;
+  const featuredImagePosition = (formData.get("featured_image_position") as string)?.trim() || null;
+  const position = featuredImagePosition && ["top", "center", "bottom"].includes(featuredImagePosition) ? featuredImagePosition : null;
   if (!title || !slug) return { error: "Title and slug are required" };
   const { data, error } = await supabase
     .from("codex_entries")
@@ -127,6 +135,8 @@ export async function updateEntry(id: string, formData: FormData) {
       body,
       category_id: categoryId || null,
       featured_image_url: featuredImageUrl || null,
+      featured_image_caption: featuredImageCaption || null,
+      featured_image_position: position,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id)
@@ -170,24 +180,36 @@ export async function addEntryImage(entryId: string, url: string, caption: strin
   if (error) return { error: error.message };
   revalidatePath("/codex");
   revalidatePath("/admin/codex");
+  const entry = await getCodexEntryById(entryId);
+  if (entry?.slug) revalidatePath(`/codex/${entry.slug}`);
   return { data };
 }
 
 export async function updateEntryImage(id: string, payload: { url?: string; caption?: string | null; sort_order?: number }) {
   const { supabase } = await ensureAuth();
+  const { data: img } = await supabase.from("codex_entry_images").select("entry_id").eq("id", id).single();
   const { error } = await supabase.from("codex_entry_images").update(payload).eq("id", id);
   if (error) return { error: error.message };
   revalidatePath("/codex");
   revalidatePath("/admin/codex");
+  if (img?.entry_id) {
+    const entry = await getCodexEntryById(img.entry_id);
+    if (entry?.slug) revalidatePath(`/codex/${entry.slug}`);
+  }
   return {};
 }
 
 export async function deleteEntryImage(id: string) {
   const { supabase } = await ensureAuth();
+  const { data: img } = await supabase.from("codex_entry_images").select("entry_id").eq("id", id).single();
   const { error } = await supabase.from("codex_entry_images").delete().eq("id", id);
   if (error) return { error: error.message };
   revalidatePath("/codex");
   revalidatePath("/admin/codex");
+  if (img?.entry_id) {
+    const entry = await getCodexEntryById(img.entry_id);
+    if (entry?.slug) revalidatePath(`/codex/${entry.slug}`);
+  }
   return {};
 }
 
@@ -209,8 +231,13 @@ export async function uploadCodexImage(file: File, pathPrefix: string): Promise<
 export async function uploadCodexImageForm(formData: FormData): Promise<{ path?: string; error?: string }> {
   const file = formData.get("file") as File | null;
   const pathPrefix = (formData.get("pathPrefix") as string) || "codex";
-  if (!file || !(file instanceof File) || file.size === 0) return { error: "No file" };
-  return uploadCodexImage(file, pathPrefix);
+  const isFile =
+    file &&
+    typeof file === "object" &&
+    typeof (file as File).size === "number" &&
+    (file as File).size > 0;
+  if (!isFile) return { error: "No file" };
+  return uploadCodexImage(file as File, pathPrefix);
 }
 
 /** Export full codex data (categories, entries, links, images). Call from authenticated client. */

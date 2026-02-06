@@ -28,6 +28,7 @@ The world of Alterun — a Next.js site with a blog (Martin/Sanderson style) and
      - `NEXT_PUBLIC_SUPABASE_URL`
      - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - In the **SQL Editor**, run the contents of `supabase/schema.sql` to create tables and RLS.
+   - To add featured image caption and position for codex entries, run `supabase/featured_image_caption_and_position.sql`.
 
 3. **Storage (for blog & codex images)**
    - In Supabase **Storage**, create a bucket named `images` and set it to **Public** if you want public image URLs.

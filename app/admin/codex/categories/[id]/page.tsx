@@ -26,11 +26,11 @@ export default async function AdminCodexCategoryEditPage({ params }: Props) {
   if (!category) notFound();
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-xl">
       <nav className="mb-6">
         <Link
           href="/admin/codex/categories"
-          className="text-alterun-gold/80 hover:text-alterun-gold text-sm uppercase tracking-wider"
+          className="text-alterun-gold/80 hover:text-alterun-gold text-xl uppercase tracking-wider"
         >
           ← Categories
         </Link>

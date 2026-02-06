@@ -24,7 +24,7 @@
     padding: 0;
   }
   body {
-    @apply bg-alterun-bg text-alterun-muted font-body antialiased text-base;
+    @apply bg-alterun-bg text-alterun-muted font-body antialiased text-xl;
     margin: 0;
     padding: 0;
   }

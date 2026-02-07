@@ -25,10 +25,10 @@ export default async function AdminCodexEditEntryPage({ params }: Props) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const [entry, categories, allEntries] = await Promise.all([
+  const [entry, categories, entriesResult] = await Promise.all([
     getCodexEntryWithRelationsForAdmin(id),
     getCodexCategories(),
-    getCodexEntries(),
+    getCodexEntries({ pageSize: 2000 }),
   ]);
 
   if (!entry) notFound();
@@ -48,7 +48,7 @@ export default async function AdminCodexEditEntryPage({ params }: Props) {
       </h1>
       <EntryForm
         categories={categories}
-        allEntries={allEntries}
+        allEntries={entriesResult.entries}
         entry={entry}
       />
     </div>

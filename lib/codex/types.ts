@@ -20,6 +20,7 @@ export type CodexEntry = {
   featured_image_url: string | null;
   featured_image_caption: string | null;
   featured_image_position: FeaturedImagePosition | null;
+  pinned: boolean;
   created_at: string;
   updated_at: string;
   author_id: string | null;

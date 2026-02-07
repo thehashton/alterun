@@ -51,6 +51,7 @@ export function EntryForm({
   const [categoryId, setCategoryId] = useState<string | null>(entry?.category_id ?? null);
   const [slugValue, setSlugValue] = useState(entry?.slug ?? "");
   const [slugInput, setSlugInput] = useState("");
+  const [pinned, setPinned] = useState(entry?.pinned ?? false);
   const featuredFileRef = useRef<HTMLInputElement>(null);
 
   const linkedEntryIds = entry?.linked_entries?.map((e) => e.id) ?? [];
@@ -74,6 +75,7 @@ export function EntryForm({
     fd.set("featured_image_url", featuredUrl);
     fd.set("featured_image_caption", featuredCaption);
     fd.set("featured_image_position", featuredPosition);
+    fd.set("pinned", pinned ? "true" : "false");
     let resolvedCategoryId = categoryId ?? "";
     if (categoryId?.startsWith("new:")) {
       const name = categoryId.slice(4).trim();
@@ -235,6 +237,9 @@ export function EntryForm({
               onChange={setBodyHtml}
               placeholder="Chronicle text…"
               minHeight="14rem"
+              codexEntries={allEntries
+                .filter((e) => e.id !== entry?.id)
+                .map((e) => ({ slug: e.slug, title: e.title }))}
             />
           </div>
           <div>
@@ -289,6 +294,19 @@ export function EntryForm({
                 />
               </div>
             </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <input
+              id="entry-pinned"
+              name="pinned"
+              type="checkbox"
+              checked={pinned}
+              onChange={(e) => setPinned(e.target.checked)}
+              className="h-5 w-5 rounded border-alterun-border bg-alterun-bg text-alterun-gold focus:ring-alterun-gold/50"
+            />
+            <label htmlFor="entry-pinned" className="text-xl text-alterun-muted cursor-pointer">
+              Pin to top of Codex (show this entry first on the codex index)
+            </label>
           </div>
           <div>
             <CategoryCombobox

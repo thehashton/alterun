@@ -16,9 +16,9 @@ export default async function AdminCodexNewEntryPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const [categories, entries] = await Promise.all([
+  const [categories, entriesResult] = await Promise.all([
     getCodexCategories(),
-    getCodexEntries(),
+    getCodexEntries({ pageSize: 2000 }),
   ]);
 
   return (
@@ -34,7 +34,7 @@ export default async function AdminCodexNewEntryPage() {
       <h1 className="font-display text-3xl text-alterun-gold uppercase tracking-widest mb-8">
         New entry
       </h1>
-      <EntryForm categories={categories} allEntries={entries} />
+      <EntryForm categories={categories} allEntries={entriesResult.entries} />
     </div>
   );
 }

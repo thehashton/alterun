@@ -10,17 +10,25 @@ export const metadata = {
   description: "Manage Codex entries.",
 };
 
-export default async function AdminCodexPage() {
+type Props = {
+  searchParams: Promise<{ category?: string }>;
+};
+
+export default async function AdminCodexPage({ searchParams }: Props) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const [categories, entries] = await Promise.all([
+  const params = await searchParams;
+  const categorySlug = params.category ?? undefined;
+
+  const [categories, entriesResult] = await Promise.all([
     getCodexCategories(),
-    getCodexEntries(),
+    getCodexEntries({ pageSize: 2000, categorySlug }),
   ]);
+  const entries = entriesResult.entries;
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-xl">
@@ -60,11 +68,27 @@ export default async function AdminCodexPage() {
           </p>
         ) : (
           <ul className="flex flex-wrap gap-2">
+            <li>
+              <Link
+                href="/admin/codex"
+                className={`ornament-border rounded px-3 py-2 transition-colors ${
+                  !categorySlug
+                    ? "bg-alterun-gold/15 text-alterun-gold border-alterun-gold/50"
+                    : "bg-alterun-bg-card text-alterun-muted hover:border-alterun-gold/30 hover:text-alterun-gold"
+                }`}
+              >
+                All
+              </Link>
+            </li>
             {categories.map((cat) => (
               <li key={cat.id}>
                 <Link
-                  href={`/admin/codex/categories/${cat.id}`}
-                  className="ornament-border rounded px-3 py-2 bg-alterun-bg-card text-alterun-muted hover:border-alterun-gold/30 transition-colors"
+                  href={`/admin/codex?category=${encodeURIComponent(cat.slug)}`}
+                  className={`ornament-border rounded px-3 py-2 transition-colors ${
+                    categorySlug === cat.slug
+                      ? "bg-alterun-gold/15 text-alterun-gold border-alterun-gold/50"
+                      : "bg-alterun-bg-card text-alterun-muted hover:border-alterun-gold/30 hover:text-alterun-gold"
+                  }`}
                 >
                   {cat.name}
                 </Link>
@@ -72,18 +96,39 @@ export default async function AdminCodexPage() {
             ))}
           </ul>
         )}
+        <p className="mt-2 text-alterun-muted/80 text-lg">
+          Filter entries by category. To add or edit categories, use{" "}
+          <Link href="/admin/codex/categories" className="text-alterun-gold/80 hover:text-alterun-gold underline">
+            Categories
+          </Link>
+          .
+        </p>
       </section>
 
       <section>
         <h2 className="font-display text-xl text-alterun-gold uppercase tracking-wider mb-4">
           Entries ({entries.length})
+          {categorySlug && (
+            <span className="ml-2 font-normal text-alterun-muted normal-case">
+              (filtered by {categories.find((c) => c.slug === categorySlug)?.name ?? categorySlug})
+            </span>
+          )}
         </h2>
         {entries.length === 0 ? (
           <p className="text-alterun-muted text-xl">
-            No entries yet.{" "}
-            <Link href="/admin/codex/entries/new" className="text-alterun-gold/80 hover:text-alterun-gold">
-              Create one
-            </Link>
+            {categorySlug ? "No entries in this category." : "No entries yet. "}
+            {!categorySlug && (
+              <>
+                <Link href="/admin/codex/entries/new" className="text-alterun-gold/80 hover:text-alterun-gold">
+                  Create one
+                </Link>
+              </>
+            )}
+            {categorySlug && (
+              <Link href="/admin/codex" className="text-alterun-gold/80 hover:text-alterun-gold ml-1">
+                Show all
+              </Link>
+            )}
           </p>
         ) : (
           <ul className="space-y-2">
@@ -111,7 +156,7 @@ export default async function AdminCodexPage() {
                   </Link>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <Link
-                      href={`/codex/${entry.slug}`}
+                      href={`/codex/${encodeURIComponent(entry.slug)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="rounded border border-alterun-border px-3 py-1.5 text-lg text-alterun-muted hover:border-alterun-gold/40 hover:text-alterun-gold transition-colors"

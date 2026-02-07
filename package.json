@@ -16,8 +16,10 @@
     "*.{js,jsx,ts,tsx}": "eslint --fix"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.6.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.10",
+    "@tiptap/extension-bubble-menu": "^3.19.0",
     "@tiptap/extension-color": "^3.19.0",
     "@tiptap/extension-link": "^3.19.0",
     "@tiptap/extension-placeholder": "^3.19.0",

@@ -114,7 +114,7 @@ export default async function CodexEntryPage({ params }: Props) {
             {entry.linked_entries.map((linked) => (
               <li key={linked.link_id}>
                 <Link
-                  href={`/codex/${linked.slug}`}
+                  href={`/codex/${encodeURIComponent(linked.slug)}`}
                   className="ornament-border rounded px-3 py-2 bg-alterun-bg-card text-alterun-gold/90 hover:border-alterun-gold/40 hover:text-alterun-gold transition-colors"
                 >
                   {linked.title}

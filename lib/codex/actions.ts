@@ -83,6 +83,7 @@ export async function createEntry(formData: FormData) {
   const featuredImageCaption = (formData.get("featured_image_caption") as string)?.trim() || null;
   const featuredImagePosition = (formData.get("featured_image_position") as string)?.trim() || null;
   const position = featuredImagePosition && ["top", "center", "bottom"].includes(featuredImagePosition) ? featuredImagePosition : "top";
+  const pinned = formData.get("pinned") === "on" || formData.get("pinned") === "true";
   if (!title || !slug) return { error: "Title is required" };
   const { data, error } = await supabase
     .from("codex_entries")
@@ -95,6 +96,7 @@ export async function createEntry(formData: FormData) {
       featured_image_url: featuredImageUrl || null,
       featured_image_caption: featuredImageCaption || null,
       featured_image_position: position,
+      pinned,
       author_id: user.id,
     })
     .select()
@@ -125,6 +127,7 @@ export async function updateEntry(id: string, formData: FormData) {
   const featuredImageCaption = (formData.get("featured_image_caption") as string)?.trim() || null;
   const featuredImagePosition = (formData.get("featured_image_position") as string)?.trim() || null;
   const position = featuredImagePosition && ["top", "center", "bottom"].includes(featuredImagePosition) ? featuredImagePosition : null;
+  const pinned = formData.get("pinned") === "on" || formData.get("pinned") === "true";
   if (!title || !slug) return { error: "Title and slug are required" };
   const { data, error } = await supabase
     .from("codex_entries")
@@ -137,6 +140,7 @@ export async function updateEntry(id: string, formData: FormData) {
       featured_image_url: featuredImageUrl || null,
       featured_image_caption: featuredImageCaption || null,
       featured_image_position: position,
+      pinned,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id)

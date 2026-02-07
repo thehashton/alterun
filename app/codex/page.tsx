@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { getCodexCategories, getCodexEntries } from "@/lib/codex/queries";
-import { IconPlus, IconEye, IconPencil } from "@/components/icons";
+import { IconPlus, IconEye, IconPencil, IconPin } from "@/components/icons";
 import { CodexSearchForm } from "./CodexSearchForm";
 
 export const metadata = {
@@ -10,24 +10,28 @@ export const metadata = {
   description: "The Codex of Alterun — people, places, and lore.",
 };
 
+const PAGE_SIZE = 12;
+
 type Props = {
-  searchParams: Promise<{ category?: string; q?: string }>;
+  searchParams: Promise<{ category?: string; q?: string; page?: string }>;
 };
 
 export default async function CodexPage({ searchParams }: Props) {
   const params = await searchParams;
   const categorySlug = params.category ?? undefined;
   const search = params.q ?? undefined;
+  const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [categories, entries] = await Promise.all([
+  const [categories, entriesResult] = await Promise.all([
     getCodexCategories(),
-    getCodexEntries({ categorySlug, search }),
+    getCodexEntries({ categorySlug, search, page, pageSize: PAGE_SIZE }),
   ]);
+  const { entries, total, totalPages } = entriesResult;
 
   return (
     <div className="codex-page max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
@@ -114,68 +118,123 @@ export default async function CodexPage({ searchParams }: Props) {
               : "The codex is yet empty. Entries may be inscribed from the Admin."}
           </p>
         ) : (
-          <ul className="space-y-4">
-            {entries.map((entry) => (
-              <li key={entry.id}>
-                <div className="codex-entry-card ornament-border flex flex-wrap items-stretch gap-4 rounded-lg border-l-2 border-l-alterun-gold/25 p-4 sm:p-5 bg-alterun-bg-card transition-all duration-200 hover:border-alterun-gold/40 hover:border-l-alterun-gold/50 hover:shadow-[0_0_20px_-4px_rgba(201,162,39,0.08)] hover:-translate-y-0.5">
-                  <Link
-                    href={`/codex/${entry.slug}`}
-                    className="min-w-0 flex-1 flex gap-4 items-start"
-                  >
-                    {entry.featured_image_url && (
-                      <div className="relative h-20 w-28 flex-shrink-0 rounded overflow-hidden bg-alterun-bg-elevated">
-                        <Image
-                          src={entry.featured_image_url}
-                          alt=""
-                          fill
-                          className="object-cover object-top"
-                          sizes="112px"
-                          unoptimized
-                        />
-                      </div>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-display text-lg text-alterun-gold uppercase tracking-wider">
-                        {entry.title}
-                      </h3>
-                      {entry.excerpt && (
-                        <p className="text-alterun-muted text-xl mt-1 line-clamp-2">
-                          {entry.excerpt}
-                        </p>
+          <>
+            <ul className="space-y-4">
+              {entries.map((entry) => (
+                <li key={entry.id}>
+                  <div className="codex-entry-card ornament-border flex flex-wrap items-stretch gap-4 rounded-lg border-l-2 border-l-alterun-gold/25 p-4 sm:p-5 bg-alterun-bg-card transition-all duration-200 hover:border-alterun-gold/40 hover:border-l-alterun-gold/50 hover:shadow-[0_0_20px_-4px_rgba(201,162,39,0.08)] hover:-translate-y-0.5">
+                    <Link
+                      href={`/codex/${encodeURIComponent(entry.slug)}`}
+                      className="min-w-0 flex-1 flex gap-4 items-start"
+                    >
+                      {entry.featured_image_url && (
+                        <div className="relative h-20 w-28 flex-shrink-0 rounded overflow-hidden bg-alterun-bg-elevated">
+                          <Image
+                            src={entry.featured_image_url}
+                            alt=""
+                            fill
+                            className="object-cover object-top"
+                            sizes="112px"
+                            unoptimized
+                          />
+                        </div>
                       )}
-                      {entry.category_id && (
-                        <span className="inline-block mt-2 text-xl text-alterun-gold-muted/80 font-display uppercase tracking-wider">
-                          {categories.find((c) => c.id === entry.category_id)?.name}
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-display text-lg text-alterun-gold uppercase tracking-wider">
+                          {entry.title}
+                        </h3>
+                        {entry.excerpt && (
+                          <p className="text-alterun-muted text-xl mt-1 line-clamp-2">
+                            {entry.excerpt}
+                          </p>
+                        )}
+                        {entry.category_id && (
+                          <span className="inline-block mt-2 text-xl text-alterun-gold-muted/80 font-display uppercase tracking-wider">
+                            {categories.find((c) => c.id === entry.category_id)?.name}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                    <div className="flex items-center gap-2 flex-shrink-0 self-center">
+                      {entry.pinned && (
+                        <span
+                          className="rounded p-2 text-alterun-gold/70"
+                          title="Pinned to top"
+                          aria-label="Pinned to top"
+                        >
+                          <IconPin className="h-5 w-5" />
                         </span>
                       )}
-                    </div>
-                  </Link>
-                  <div className="flex items-center gap-2 flex-shrink-0 self-center">
-                    <Link
-                      href={`/codex/${entry.slug}`}
-                      className="rounded p-2 text-alterun-muted hover:bg-alterun-gold/15 hover:text-alterun-gold transition-colors"
-                      title="View entry"
-                      aria-label="View entry"
-                    >
-                      <IconEye className="h-5 w-5" />
-                    </Link>
-                    {user && (
                       <Link
-                        href={`/admin/codex/entries/${entry.id}`}
+                        href={`/codex/${encodeURIComponent(entry.slug)}`}
                         className="rounded p-2 text-alterun-muted hover:bg-alterun-gold/15 hover:text-alterun-gold transition-colors"
-                        title="Edit entry"
-                        aria-label="Edit entry"
+                        title="View entry"
+                        aria-label="View entry"
                       >
-                        <IconPencil className="h-5 w-5" />
+                        <IconEye className="h-5 w-5" />
                       </Link>
-                    )}
+                      {user && (
+                        <Link
+                          href={`/admin/codex/entries/${entry.id}`}
+                          className="rounded p-2 text-alterun-muted hover:bg-alterun-gold/15 hover:text-alterun-gold transition-colors"
+                          title="Edit entry"
+                          aria-label="Edit entry"
+                        >
+                          <IconPencil className="h-5 w-5" />
+                        </Link>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+            {entries.length > 0 && (
+              <nav
+                className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-lg text-alterun-muted"
+                aria-label="Codex pagination"
+              >
+                {page > 1 ? (
+                  <Link
+                    href={buildCodexPageUrl(page - 1, categorySlug, search)}
+                    className="hover:text-alterun-gold transition-colors"
+                  >
+                    ← Previous
+                  </Link>
+                ) : (
+                  <span className="text-alterun-muted/50" aria-hidden>← Previous</span>
+                )}
+                <span className="text-alterun-gold-muted/90" aria-live="polite">
+                  Page {page} of {totalPages}
+                  {total != null && <span className="text-alterun-muted/70"> ({total} chronicles)</span>}
+                </span>
+                {page < totalPages ? (
+                  <Link
+                    href={buildCodexPageUrl(page + 1, categorySlug, search)}
+                    className="hover:text-alterun-gold transition-colors"
+                  >
+                    Next →
+                  </Link>
+                ) : (
+                  <span className="text-alterun-muted/50" aria-hidden>Next →</span>
+                )}
+              </nav>
+            )}
+          </>
         )}
       </section>
     </div>
   );
+}
+
+function buildCodexPageUrl(
+  page: number,
+  categorySlug?: string,
+  search?: string
+): string {
+  const params = new URLSearchParams();
+  if (page > 1) params.set("page", String(page));
+  if (categorySlug) params.set("category", categorySlug);
+  if (search) params.set("q", search);
+  const q = params.toString();
+  return q ? `/codex?${q}` : "/codex";
 }

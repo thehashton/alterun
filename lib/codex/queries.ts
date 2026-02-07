@@ -21,12 +21,31 @@ export async function getCodexCategories(): Promise<CodexCategory[]> {
   return data ?? [];
 }
 
+const DEFAULT_PAGE_SIZE = 12;
+
+export type GetCodexEntriesResult = {
+  entries: CodexEntry[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
 export async function getCodexEntries(options?: {
   categorySlug?: string;
   search?: string;
-}): Promise<CodexEntry[]> {
+  page?: number;
+  pageSize?: number;
+}): Promise<GetCodexEntriesResult> {
   const supabase = await createClient();
-  let q = supabase.from("codex_entries").select("*").order("title");
+  const page = Math.max(1, options?.page ?? 1);
+  const pageSize = Math.min(50, Math.max(1, options?.pageSize ?? DEFAULT_PAGE_SIZE));
+
+  let q = supabase
+    .from("codex_entries")
+    .select("*", { count: "exact" })
+    .order("pinned", { ascending: false })
+    .order("title", { ascending: true });
 
   if (options?.categorySlug) {
     const { data: cat } = await supabase
@@ -45,22 +64,57 @@ export async function getCodexEntries(options?: {
     );
   }
 
-  const { data, error } = await q;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  const { data, error, count } = await q.range(from, to);
   if (error) throw error;
-  return data ?? [];
+
+  const entries = (data ?? []) as CodexEntry[];
+  const total = count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  return {
+    entries,
+    total,
+    page,
+    pageSize,
+    totalPages,
+  };
+}
+
+/** Decode and normalize slug from URL so lookup matches DB (encoding, unicode, case). */
+function normalizeSlugForLookup(slug: string): string[] {
+  try {
+    const decoded = decodeURIComponent(slug.replace(/\+/g, " "));
+    const normalized = decoded.normalize("NFC");
+    const lower = normalized.toLowerCase();
+    return [normalized, lower].filter((s, i, a) => a.indexOf(s) === i);
+  } catch {
+    return [slug];
+  }
 }
 
 export async function getCodexEntryBySlug(
   slug: string
 ): Promise<CodexEntryWithRelations | null> {
   const supabase = await createClient();
-  const { data: entry, error: eErr } = await supabase
-    .from("codex_entries")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-  if (eErr || !entry) return null;
+  const candidates = normalizeSlugForLookup(slug);
 
+  for (const candidate of candidates) {
+    const { data: entry, error: eErr } = await supabase
+      .from("codex_entries")
+      .select("*")
+      .eq("slug", candidate)
+      .single();
+    if (!eErr && entry) return await hydrateEntryWithRelations(supabase, entry);
+  }
+  return null;
+}
+
+async function hydrateEntryWithRelations(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  entry: CodexEntry
+): Promise<CodexEntryWithRelations | null> {
   const [categories, links, images] = await Promise.all([
     entry.category_id
       ? supabase
